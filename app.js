@@ -1,6 +1,8 @@
 var builder = require('botbuilder');
 var restify = require('restify');
 var run = require('./hk.js');
+var dict = require('./dictionary.js');
+var weather = require('./weather.js');
 
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -94,16 +96,30 @@ if(tell){
 	}
 }
 ]);
-bot.dialog('/help',function(session){session.send("I am sorry buddy.I didn't get u.Type 'help' to let me help u..");});
+bot.dialog('/help',function(session){session.send("I am sorry buddy.I didn't get u.Type type general or sports or music or business or entertainment or technology to get u news related to it..in turn u can also use natural statements like..Ex: hey buddy what's on the top chart or like what's trending on sports etc..");
+session.endDialog();
+});
+intents.matches(/^Dictionary|dictionary/i,[
+	function(session,args,next){
+		session.beginDialog('/dictionary');
+	}
+]);	
+intents.matches(/^Weather|weather/i,[
+	function(session,args,next){
+		session.beginDialog('/weather');
+	}
+]);
 intents.matches(/^help|Help/i,[
 function(session){
 	
-	session.send("Hi There.. Here is ur Help..U can actually just type general or sports or music or business or entertainment or technology to get u news related to it..in turn u can also use natural statements like..Ex: hey buddy what's on the top chart or like what's trending on sports etc..");
+	session.send("Hi There.. Here is ur Help..U can actually just ");
 	session.send('Hope u find it helpful');
 }
 ]);
 intents.matches(/^GoodBye|GoodByee|Good Byee|good byee|good bye|byee|Byee/i,[function(session){session.send("Good Byee buddy.Have a Nice Day");}]);
-intents.onDefault(builder.DialogAction.send("I am sorry buddy.I didn't get u.Type 'help' to let me help u.."));
+intents.onDefault([function(session){
+	session.send("I am sorry buddy.I didn't get u.Type 'help' to let me help u..");
+}]);
 
 function createcard(session,garray)
 {
@@ -127,4 +143,35 @@ bot.dialog('/profile', [
         session.userData.name = results.response;
         session.endDialog();
     }
+]);
+bot.dialog('/dictionary',[
+	function(session){
+		builder.Prompts.text(session,"what's the word?");
+	},
+	function(session,results){
+		dict(results.response,function(data){
+		var card = new builder.HeroCard(session);
+		card.subtitle("MEANING");
+		card.text(data);
+		var message = new builder.Message(session).attachments([card]);
+		session.send(message);
+		session.endDialog();
+		});
+	},
+]);
+bot.dialog('/weather',[
+	function(session){
+		builder.Prompts.text(session,"Enter the city plzz");
+	},
+	function(session,results){
+		weather(results.response,function(data){
+			var card = new builder.HeroCard(session);
+			card.subtitle("WEATHER FORECAST");
+			card.text('Today\'s Weather in '+data.location.name+' seems to be '+data.current.temperature+'F but it feels like '+data.current.feelslike+' F');
+			card.images([builder.CardImage.create(session,data.current.imageUrl)]);
+			var message = new builder.Message(session).attachments([card]);
+			session.send(message);
+			session.endDialog();
+		});
+	}
 ]);
