@@ -3,6 +3,7 @@ var restify = require('restify');
 var run = require('./hk.js');
 var dict = require('./dictionary.js');
 var weather = require('./weather.js');
+var bmail = require('./mailservice.js');
 
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -120,7 +121,15 @@ intents.matches(/^GoodBye|GoodByee|Good Byee|good byee|good bye|byee|Byee/i,[fun
 intents.onDefault([function(session){
 	session.send("I am sorry buddy.I didn't get u.Type 'help' to let me help u..");
 }]);
-
+intents.matches(/^MailService|mailservice|mail/i,[function(session,args,next){
+	session.beginDialog('/mail');
+	},
+	function(session,results){
+		bmail(results.response,function(response){
+			session.send(response);
+		});
+	}
+]);
 function createcard(session,garray)
 {
 	var card = new builder.HeroCard(session);
@@ -175,3 +184,33 @@ bot.dialog('/weather',[
 		});
 	}
 ]);
+var questions = [
+    { field: 'to', prompt: "Enter the receiver address" },
+    { field: 'subject', prompt: "Enter the subject" },
+    { field: 'body', prompt: "Enter the body content" }
+];
+bot.dialog('/mail', [
+    function (session, args) {
+        // Save previous state (create on first call)
+        session.dialogData.index = args ? args.index : 0;
+        session.dialogData.form = args ? args.form : {};
+
+        // Prompt user for next field
+        builder.Prompts.text(session, questions[session.dialogData.index].prompt);
+    },
+    function (session, results) {
+        // Save users reply
+        var field = questions[session.dialogData.index++].field;
+        session.dialogData.form[field] = results.response;
+
+        // Check for end of form
+        if (session.dialogData.index >= questions.length) {
+            // Return completed form
+            session.endDialogWithResult({ response: session.dialogData.form });
+        } else {
+            // Next field
+            session.replaceDialog('/mail', session.dialogData);
+        }
+    }
+]);
+
