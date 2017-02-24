@@ -1,28 +1,28 @@
 	
-module.exports = function(mail,callback){
+module.exports = function(data,callback){
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
  
 var transporter = nodemailer.createTransport(smtpTransport({
    service: 'Gmail',
    auth: {
-       user: '@gmail.com',
+       user: 'harishkumar120896@gmail.com',
        pass: 'dyhgxxzchdhdolqo'
    }
 }));
 
 let Mailoptions = {
 	from: 'harishkumar120896@gmail.com',
-	to: 'gowtham4466@gmail.com',
-	subject: 'mail sent from harish',
+	to: data.to,
+	subject: data.subject,
 	text: 'Hi, da eppdi iruka',
-	html: '<b>hello world!</b>'
+	html: '<b>'+data.body+'</b>'
 };
 
 transporter.sendMail(Mailoptions,function(error,info){
 	if(error){
-		return console.log(error);
-	} 
-	console.log("Mail sent successfully");
+		callback("Sent failed");
+	} else{
+	callback("Mail sent successfully");}
 });
 }
