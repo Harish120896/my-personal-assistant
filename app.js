@@ -4,6 +4,7 @@ var run = require('./hk.js');
 var dict = require('./dictionary.js');
 var weather = require('./weather.js');
 var bmail = require('./mailservice.js');
+var places = require('./geocoder.js');
 
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -30,7 +31,7 @@ var connector = new builder.ChatConnector(
 var bot = new builder.UniversalBot(connector);
 server.post('/api/messages',connector.listen());
 
-var model = 'https://api.projectoxford.ai/luis/v2.0/apps/44cfa56f-3893-43c4-8f1e-00712b40523c?subscription-key=08bf84c2bc0b4264bf62f4f06d6c5731&verbose=true';
+var model = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/8d2fa7c8-508c-483a-9ef6-91a9c21f866b?subscription-key=e09374baf0314b689fcb02d659b640e1&verbose=true';
 var recognizer = new builder.LuisRecognizer(model);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] });
 
@@ -49,7 +50,7 @@ function (session, args, next) {
     },
     function (session, results) {
         session.send('Hi.. %s!', session.userData.name);
-		session.send('I am ur news bot.. Feel free to ask me on updates..i will be here to help u with wat u want..');
+		session.send('I am ur  Pal.. Feel free to ask me on updates..i will be here to help u with wat u want..');
     }
 ]);
 
@@ -97,7 +98,7 @@ if(tell){
 	}
 }
 ]);
-bot.dialog('/help',function(session){session.send("I am sorry buddy.I didn't get u.Type type general or sports or music or business or entertainment or technology to get u news related to it..in turn u can also use natural statements like..Ex: hey buddy what's on the top chart or like what's trending on sports etc..");
+bot.dialog('/help',function(session){session.send("I am sorry buddy.I didn't get u.");
 session.endDialog();
 });
 intents.matches(/^Dictionary|dictionary/i,[
@@ -105,15 +106,26 @@ intents.matches(/^Dictionary|dictionary/i,[
 		session.beginDialog('/dictionary');
 	}
 ]);	
-intents.matches(/^Weather|weather/i,[
+intents.matches('weather-wah',[
 	function(session,args,next){
-		session.beginDialog('/weather');
+		var result =  builder.EntityRecognizer.findEntity(args.entities,'place');
+		console.log(result.entity);
+		weather("chennai",function(data){
+		var card = new builder.HeroCard(session);
+			card.subtitle("WEATHER FORECAST");
+			card.text('Today\'s Weather in '+data.location.name+' seems to be '+data.current.temperature+'F but it feels like '+data.current.feelslike+' F');
+			card.images([builder.CardImage.create(session,data.current.imageUrl)]);
+			var message = new builder.Message(session).attachments([card]);
+		session.send(message);
+		//session.beginDialog('/weather');
+	});
 	}
 ]);
 intents.matches(/^help|Help/i,[
 function(session){
 	
-	session.send("Hi There.. Here is ur Help..U can actually just ");
+	session.send("Hi There.. Here is ur Help..U can actually just keep it simple.. by asking directly ");
+	session.send("say for Ex: sports for sports news,dictionary for finding meaning,mail for sending mail,weather for weather etc..");
 	session.send('Hope u find it helpful');
 }
 ]);
@@ -129,6 +141,10 @@ intents.matches(/^MailService|mailservice|mail/i,[function(session,args,next){
 			session.send(response);
 		});
 	}
+]);
+intents.matches(/^Places|nearby places|Nearby places/i,[function(session,args,next){
+	session.beginDialog('/places');
+}
 ]);
 function createcard(session,garray)
 {
@@ -168,22 +184,23 @@ bot.dialog('/dictionary',[
 		});
 	},
 ]);
-bot.dialog('/weather',[
-	function(session){
-		builder.Prompts.text(session,"Enter the city plzz");
-	},
-	function(session,results){
-		weather(results.response,function(data){
-			var card = new builder.HeroCard(session);
-			card.subtitle("WEATHER FORECAST");
-			card.text('Today\'s Weather in '+data.location.name+' seems to be '+data.current.temperature+'F but it feels like '+data.current.feelslike+' F');
-			card.images([builder.CardImage.create(session,data.current.imageUrl)]);
-			var message = new builder.Message(session).attachments([card]);
-			session.send(message);
-			session.endDialog();
-		});
-	}
-]);
+// bot.dialog('/weather',[
+// 	function(session){
+// 		builder.Prompts.text(session,"Enter the city plzz");
+// 	},
+// 	function(session,results){
+// 		weather(results.response,function(data){
+// 			var card = new builder.HeroCard(session);
+// 			card.subtitle("WEATHER FORECAST");
+// 			card.text('Today\'s Weather in '+data.location.name+' seems to be '+data.current.temperature+'F but it feels like '+data.current.feelslike+' F');
+// 			card.images([builder.CardImage.create(session,data.current.imageUrl)]);
+// 			var message = new builder.Message(session).attachments([card]);
+// 			session.send(message);
+// 			session.endDialog();
+// 		});
+// 	}
+// ]);
+
 var questions = [
     { field: 'to', prompt: "Enter the receiver address" },
     { field: 'subject', prompt: "Enter the subject" },
@@ -214,3 +231,29 @@ bot.dialog('/mail', [
     }
 ]);
 
+bot.dialog('/places',[
+	function(session){
+		builder.Prompts.text(session,"Enter the valid address");
+	},
+	function(session,results){
+		places(results.response,function(data){
+			var cards=[];
+			for (var i = 0;i < data.length;i++) {
+				cards[i] = pcard(session,data[i]);
+			}
+    		var message = new builder.Message(session).attachments(cards).attachmentLayout('carousel');
+    		session.send(message);
+			session.endDialog();
+		});
+	}
+]);
+
+function pcard(session,r)
+{	
+	console.log(r);
+	var card = new builder.HeroCard(session);
+	card.text("Restaurant Name:"+r.name);
+	card.images([builder.CardImage.create(session,r.icon)]);
+	card.subtitle("Address:"+r.vicinity);
+	return card;
+}
