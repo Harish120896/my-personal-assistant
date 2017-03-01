@@ -1,2 +1,2 @@
-# MyNewsReader
-Gets the current news..
+# MyPal
+My Personal assistant...
