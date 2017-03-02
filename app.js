@@ -63,7 +63,9 @@ function (session) {
     }
 ]);
 intents.matches('GeneralNews',[function(session,args,next){
+	console.log("haha");
 	var ygeneral = builder.EntityRecognizer.findEntity(args.entities, 'general');
+	console.log(ygeneral);
 	if(ygeneral){
 	var resulted;
 	var search = 'general';
@@ -101,16 +103,25 @@ if(tell){
 bot.dialog('/help',function(session){session.send("I am sorry buddy.I didn't get u.");
 session.endDialog();
 });
-intents.matches(/^Dictionary|dictionary/i,[
+intents.matches('dictionary',[
 	function(session,args,next){
-		session.beginDialog('/dictionary');
-	}
+		//session.beginDialog('/dictionary');
+		var result =  builder.EntityRecognizer.findEntity(args.entities,'word');
+		console.log(result);
+		dict(result.entity,function(data){
+		var card = new builder.HeroCard(session);
+		card.subtitle("MEANING");
+		card.text(data);
+		var message = new builder.Message(session).attachments([card]);
+		session.send(message);
+		});
+		}	
 ]);	
 intents.matches('weather-wah',[
 	function(session,args,next){
 		var result =  builder.EntityRecognizer.findEntity(args.entities,'place');
 		console.log(result.entity);
-		weather("chennai",function(data){
+		weather(result.entity,function(data){
 		var card = new builder.HeroCard(session);
 			card.subtitle("WEATHER FORECAST");
 			card.text('Today\'s Weather in '+data.location.name+' seems to be '+data.current.temperature+'F but it feels like '+data.current.feelslike+' F');
@@ -133,11 +144,15 @@ intents.matches(/^GoodBye|GoodByee|Good Byee|good byee|good bye|byee|Byee/i,[fun
 intents.onDefault([function(session){
 	session.send("I am sorry buddy.I didn't get u.Type 'help' to let me help u..");
 }]);
-intents.matches(/^MailService|mailservice|mail/i,[function(session,args,next){
+intents.matches('mail',[function(session,args,next){
+	var result =  builder.EntityRecognizer.findEntity(args.entities,'mailid');
+	console.log(result.entity);
 	session.beginDialog('/mail');
 	},
 	function(session,results){
-		bmail(results.response,function(response){
+		var obj = results.response;
+		obj['to'] = "saiharish120896@gmail.com";
+		bmail(obj,function(response){
 			session.send(response);
 		});
 	}
@@ -169,21 +184,21 @@ bot.dialog('/profile', [
         session.endDialog();
     }
 ]);
-bot.dialog('/dictionary',[
-	function(session){
-		builder.Prompts.text(session,"what's the word?");
-	},
-	function(session,results){
-		dict(results.response,function(data){
-		var card = new builder.HeroCard(session);
-		card.subtitle("MEANING");
-		card.text(data);
-		var message = new builder.Message(session).attachments([card]);
-		session.send(message);
-		session.endDialog();
-		});
-	},
-]);
+// bot.dialog('/dictionary',[
+// 	function(session){
+// 		builder.Prompts.text(session,"what's the word?");
+// 	},
+// 	function(session,results){
+// 		dict(results.response,function(data){
+// 		var card = new builder.HeroCard(session);
+// 		card.subtitle("MEANING");
+// 		card.text(data);
+// 		var message = new builder.Message(session).attachments([card]);
+// 		session.send(message);
+// 		session.endDialog();
+// 		});
+// 	},
+// ]);
 // bot.dialog('/weather',[
 // 	function(session){
 // 		builder.Prompts.text(session,"Enter the city plzz");
@@ -202,7 +217,7 @@ bot.dialog('/dictionary',[
 // ]);
 
 var questions = [
-    { field: 'to', prompt: "Enter the receiver address" },
+//    { field: 'to', prompt: "Enter the receiver address" },
     { field: 'subject', prompt: "Enter the subject" },
     { field: 'body', prompt: "Enter the body content" }
 ];
