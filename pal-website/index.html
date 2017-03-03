@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PAL</title>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="./styles/materialize.min.css">
+  <script src="./script/materialize.js"></script>
+  <style type="text/css">
+    .loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 10vh;
+    height: 10vh;
+    animation: spin 1s linear infinite;
+    background-color: black;
+    opacity: 1;
+    margin:40vh 40vw 40vh 40vw;
+    z-index:2;
+    position: absolute;
+
+
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+  <style>
+  .my{
+   height: 100vh;width:100vw;background-color: blue;
+    /*z-index: 0;*/
+  }
+
+ .containLoader{
+  position: absolute;border: 2px solid red;height: 99vh;width: 99vw;overflow: hidden;background-color: black;opacity: 0.2;z-index: 2
+ }
+ 
+  </style>
+
+  <script  type="text/javascript">
+        setTimeout(function(){
+            $('#divID').remove();
+        }, 1000);
+
+   </script>
+</head>
+<body>
+<div class = "containLoader" id="divID">
+    <!-- <div class="loader loader-class" id="aap"></div> -->
+    <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>P</h1></div>
+
+</div>
+<div class = "containLoader" id="divID">
+    <!-- <div class="loader loader-class" id="aap"></div> -->
+    <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>A</h1></div>
+
+</div>
+<div class = "containLoader" id="divID">
+    <!-- <div class="loader loader-class" id="aap"></div> -->
+    <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>L</h1></div>
+
+</div>
+
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+    <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+    <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+    <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+  </ul>
+
+  <div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <h3>HOME</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div id="menu1" class="tab-pane fade">
+      <h3>Menu 1</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="menu2" class="tab-pane fade">
+      <h3>Menu 2</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    </div>
+    <div id="menu3" class="tab-pane fade">
+      <h3>Menu 3</h3>
+      <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
