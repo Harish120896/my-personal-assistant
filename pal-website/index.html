@@ -27,11 +27,7 @@
 
 
   }
-
-  @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+  
     </style>
     <style>
     .my{
@@ -40,31 +36,58 @@
     }
 
    .containLoader{
-    position: absolute;border: 2px solid red;height: 99vh;width: 99vw;overflow: hidden;background-color: black;opacity: 0.2;z-index: 2;display: none;
+    position: absolute;border: 2px solid red;height: 99vh;width: 99vw;overflow: hidden;background-color: black;opacity: 1;z-index: 2;display: none;
    }
+   @-webkit-keyframes slideIn {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 0;
+  }
+  100%{
+  	left:100%;
+  }
+}
+
+.slide-in{
+   -webkit-animation: slideIn ease-in 1; 
+  animation: slideIn ease-in 1;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-duration: 750ms;
+  animation-duration: 750ms;
+}
    
     </style>
 
     <script  type="text/javascript">
+    		// setTimeout(function(){
+    		// 	$('#homeHide').hide();
+    		// },0)
+    		setTimeout(function(){
+    			$('#homeHide').hide(0);
+    			$('#homeHide').show(3800);
+    		},0)
               $('#divID1').hide();
               $('#divID2').hide();
               $('#divID3').hide();
 
           setTimeout(function(){
-              $('#divID1').show(1500);
+              $('#divID1').show(800);
               $('#divID2').hide();
               $('#divID3').hide();
           }, 1000); 
           setTimeout(function(){
               $('#divID1').hide();
-              $('#divID2').show(1500);
+              $('#divID2').show(800);
               $('#divID3').hide();
-          }, 1000); 
-          setTimeout(function(){
-              $('#divID1').hide();
-              $('#divID2').hide();
-              $('#divID3').show(1500);
           }, 2000); 
+          setTimeout(function(){
+              $('#divID1').hide();
+              $('#divID2').hide();
+              $('#divID3').show(800);
+          }, 3000); 
           setTimeout(function(){
               $('#divID1').hide();
               $('#divID2').hide();
@@ -74,44 +97,46 @@
      </script>
   </head>
   <body>
-  <div class = "containLoader" id="divID1">
-      <!-- <div class="loader loader-class" id="aap"></div> -->
-      <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>P</h1></div>
-  </div>
-  <div class = "containLoader" id="divID2">
-      <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>A</h1></div>
-  </div>
-  <div class = "containLoader" id="divID3">
-      <div style="margin:40vh 40vw 40vh 40vw;color: red"><h1>L</h1></div>
-  </div>
+   <div class="height:100vh;width:100vh;background-color:black;">
+	  <div class = "containLoader" id="divID1">
+	      <div style="margin:48vh 48vw 48vh 48vw;color: yellow;opacity: 1" class="slide-in"><h1>P</h1></div>
+	  </div>
+	  <div class = "containLoader" id="divID2">
+	      <div style="margin:48vh 48vw 48vh 48vw;color: yellow;opacity: 1" class="slide-in"><h1>A</h1></div>
+	  </div>
+	  <div class = "containLoader" id="divID3">
+	      <div style="margin:48vh 48vw 48vh 48vw;color: yellow;opacity: 1" class="slide-in"><h1>L</h1></div>
+	  </div>
+	</div> 
+	<div id="homeHide"> 
+	  <div class="container">
+	    <ul class="nav nav-tabs">
+	      <li class="active "><a data-toggle="tab" href="#home">Home</a></li>
+	      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
+	      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
+	      <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
+	    </ul>
 
-  <div class="container">
-    <ul class="nav nav-tabs">
-      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-      <li><a data-toggle="tab" href="#menu1">Menu 1</a></li>
-      <li><a data-toggle="tab" href="#menu2">Menu 2</a></li>
-      <li><a data-toggle="tab" href="#menu3">Menu 3</a></li>
-    </ul>
-
-    <div class="tab-content">
-      <div id="home" class="tab-pane fade in active">
-        <h3>HOME</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-      </div>
-      <div id="menu1" class="tab-pane fade">
-        <h3>Menu 1</h3>
-        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      </div>
-      <div id="menu2" class="tab-pane fade">
-        <h3>Menu 2</h3>
-        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-      </div>
-      <div id="menu3" class="tab-pane fade">
-        <h3>Menu 3</h3>
-        <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
-      </div>
-    </div>
-  </div>
+	    <div class="tab-content">
+	      <div id="home" class="tab-pane fade in active">
+	        <h3>HOME</h3>
+	        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+	      </div>
+	      <div id="menu1" class="tab-pane fade">
+	        <h3>Menu 1</h3>
+	        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+	      </div>
+	      <div id="menu2" class="tab-pane fade">
+	        <h3>Menu 2</h3>
+	        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+	      </div>
+	      <div id="menu3" class="tab-pane fade">
+	        <h3>Menu 3</h3>
+	        <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+	      </div>
+	    </div>
+	  </div>
+	  </div>
 
   </body>
   </html>
