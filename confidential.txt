@@ -1,9 +1,0 @@
-https://od-api.oxforddictionaries.com:443/api/v1/entries/en/ace
-
-api base url: 	https://od-api.oxforddictionaries.com/api/v1
-(srilak12)S
-App id: 	cf444182
-Application keys: 	3f1d0b8164126740d64020a1446e1406
-
-/dyhgxxzchdhdolqo
-//https://myaccount.google.com/apppasswords?pli=1&rapt=AEjHL4NdNNqtGGqTuVCNTQww2TrK3zDquwglrdiwaPWZxpYGX7Y-21UVzna3aPt7qvoNOGY0T8MeRd9d0SPBoQSbO7VzzIbwGA
