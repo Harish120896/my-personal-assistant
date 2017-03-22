@@ -14,6 +14,12 @@
   "license": "MIT",
   "dependencies": {
     "botbuilder": "^3.4.4",
-    "restify": "^4.3.0"
+    "google-places": "0.0.2",
+    "needle": "^1.5.2",
+    "node-geocoder": "^3.16.0",
+    "request": "^2.81.0",
+    "restify": "^4.3.0",
+    "valid-url": "^1.0.9",
+    "weather-js": "^1.0.2"
   }
 }
